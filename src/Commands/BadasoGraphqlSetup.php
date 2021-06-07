@@ -45,12 +45,20 @@ class BadasoGraphqlSetup extends Command
             } else {
                 $this->force = false;
             }
+
+            $this->publishLightHouse();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
 
-    public function publishConfig()
+    public function publishLightHouse()
     {
+        $this->call('php artisan vendor:publish', [
+            '--tag' => 'lighthouse-schema',
+        ]);
+        $this->call('php artisan vendor:publish', [
+            '--tag' => 'graphql-playground-config',
+        ]);
     }
 }
