@@ -2,13 +2,12 @@
 
 namespace Uasoft\Badaso\Module\Graphql\Providers;
 
-use GraphQL\Language\Parser;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Schema\TypeRegistry;
 use Uasoft\Badaso\Module\Graphql\BadasoGraphqlModule;
-use Uasoft\Badaso\Module\Graphql\Core\GenerateTypeGraphql;
+use Uasoft\Badaso\Module\Graphql\Commands\BadasoGraphqlSetup;
 use Uasoft\Badaso\Module\Graphql\Facades\BadasoGraphqlModule as FacadesBadasoGraphqlModule;
 use Uasoft\Badaso\Module\Graphql\Middleware\BadasoGraphQLMiddleware;
 
@@ -31,15 +30,20 @@ class BadasoGraphqlModuleServiceProvider extends ServiceProvider
             return new BadasoGraphqlModule();
         });
 
+        $this->loadRoutesFrom(__DIR__.'/../Routes/graphql.php');
+
         $this->publishes([
-            // __DIR__.'/../Config/badaso-graphql.php' => config_path('badaso-graphql.php'),
+            __DIR__.'/../Config/badaso-graphql.php' => config_path('badaso-graphql.php'),
+            __DIR__.'/../Config/graphql-playground' => config_path('graphql-playground'),
         ], 'badaso-graphql-config');
+        
+        $this->publishes([,
+            __DIR__.'/../Seeder' => database_path('seeds/Badaso'),
+        ], 'badaso-graphql-seeder');
 
-        $contents = file_get_contents(base_path('graphql/schema.graphql'));
-        $schema = Parser::parse($contents);
-
-        $generateDataType = new GenerateTypeGraphql($typeRegistry);
-        $generateDataType->handle();
+        $this->publishes([,
+            __DIR__.'/../BadasoGraphQL' => app_path('BadasoGraphQL'),
+        ], 'badaso-graphql');
     }
 
     /**
@@ -57,6 +61,6 @@ class BadasoGraphqlModuleServiceProvider extends ServiceProvider
      */
     private function registerConsoleCommands()
     {
-        // $this->commands(BadasoGraphqlSetup::class);
+        $this->commands(BadasoGraphqlSetup::class);
     }
 }

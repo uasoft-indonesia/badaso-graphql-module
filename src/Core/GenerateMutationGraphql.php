@@ -2,19 +2,23 @@
 
 namespace Uasoft\Badaso\Module\Graphql\Core;
 
+use GraphQL\Error\UserError;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
+use Uasoft\Badaso\Module\Graphql\Traits\PermissionForCRUDTrait;
 
-class GenerateMutationGraphql
+class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
 {
-    private $graphql_data_type;
-    private $data_type;
-    private $fields_mutations;
-    private $create_input_type;
-    private $update_input_type;
-    private $delete_input_type;
-    private $read_type;
-    private $browse_type;
+    use PermissionForCRUDTrait;
+
+    protected $graphql_data_type;
+    protected $data_type;
+    protected $fields_mutations;
+    protected $create_input_type;
+    protected $update_input_type;
+    protected $delete_input_type;
+    protected $read_type;
+    protected $browse_type;
 
     public function __construct($graphql_data_type, $data_type, $fields_mutations)
     {
@@ -25,15 +29,22 @@ class GenerateMutationGraphql
 
         $this->graphql_data_type = $this->graphql_data_type[$this->table_name];
         [
-            GenerateTypeGraphql::$createInputType => $this->create_input_type,
-            GenerateTypeGraphql::$updateInputType => $this->update_input_type,
-            GenerateTypeGraphql::$deleteInputType => $this->delete_input_type,
-            GenerateTypeGraphql::$readType => $this->read_type,
-            GenerateTypeGraphql::$browseType => $this->browse_type,
+            GenerateGraphql::$createInputType => $this->create_input_type,
+            GenerateGraphql::$updateInputType => $this->update_input_type,
+            GenerateGraphql::$deleteInputType => $this->delete_input_type,
+            GenerateGraphql::$readType => $this->read_type,
+            GenerateGraphql::$browseType => $this->browse_type,
         ] = $this->graphql_data_type;
+
+        $this->customizeFieldMutation();
     }
 
-    public function generateCrudMutation()
+    protected function customizeFieldMutation()
+    {
+        // todo customize fields mutation
+    }
+
+    public function generateCreateMutation()
     {
         // generate create
         $this->fields_mutations[$this->table_name.'_create'] = [
@@ -42,11 +53,25 @@ class GenerateMutationGraphql
                 'input' => $this->create_input_type,
             ],
             'resolve' => function ($rootValue, $args) {
-                $data_create = $args['input'];
-                DB::table($this->table_name)->insert([$data_create]);
-                $table_latest_after_create = DB::table($this->table_name)->latest('id')->first();
+                $this->permissionCrud('add');
 
-                return $table_latest_after_create;
+                DB::beginTransaction();
+                try {
+                    $data_create = $args['input'];
+                    $stored_data = $this->insertData($data_create, $this->data_type);
+
+                    activity($this->data_type->display_name_singular)
+                    ->causedBy(auth()->user() ?? null)
+                    ->withProperties(['attributes' => $stored_data])
+                    ->log($this->data_type->display_name_singular.' has been created');
+
+                    DB::commit();
+
+                    return $stored_data;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    throw new UserError($e->getMessage());
+                }
             },
         ];
     }
@@ -61,12 +86,31 @@ class GenerateMutationGraphql
                 'input' => $this->update_input_type,
             ],
             'resolve' => function ($rootValue, $args) {
-                $data_update = $args['input'];
-                $table_update = DB::table($this->table_name)->where('id', $args['id']);
+                $this->permissionCrud('edit');
 
-                $table_update->update($data_update);
+                DB::beginTransaction();
+                try {
+                    $data_update_id = $args['id'];
+                    $data_update = $args['input'];
+                    $data_update['id'] = $data_update_id;
 
-                return $table_update->first();
+                    $updated = $this->updateData($data_update, $this->data_type)['updated_data'];
+
+                    activity($this->data_type->display_name_singular)
+                    ->causedBy(auth()->user() ?? null)
+                    ->withProperties([
+                        'old' => $updated['old_data'],
+                        'attributes' => $updated['updated_data'],
+                    ])
+                    ->log($this->data_type->display_name_singular.' has been updated');
+
+                    DB::commit();
+
+                    return $updated;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    throw new UserError($e->getMessage());
+                }
             },
         ];
     }
@@ -80,16 +124,31 @@ class GenerateMutationGraphql
                 'id' => Type::string(),
             ],
             'resolve' => function ($rootValue, $args) {
-                $data_delete = DB::table($this->table_name);
+                $this->permissionCrud('delete');
 
-                return $data_delete->delete($args['id']) ? 'Delete Success' : 'Failed Delete';
+                DB::beginTransaction();
+                try {
+                    $this->deleteData($args, $this->data_type);
+
+                    activity($this->data_type->display_name_singular)
+                    ->causedBy(auth()->user() ?? null)
+                    ->withProperties($args)
+                    ->log($this->data_type->display_name_singular.' has been deleted');
+
+                    DB::commit();
+
+                    return 'Delete Success';
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    throw new UserError($e->getMessage());
+                }
             },
         ];
     }
 
     public function handle()
     {
-        $this->generateCrudMutation();
+        $this->generateCreateMutation();
         $this->generateUpdateMutation();
         $this->generateDeleteMutation();
 

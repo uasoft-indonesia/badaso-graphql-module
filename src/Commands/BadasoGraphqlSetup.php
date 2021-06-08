@@ -46,19 +46,27 @@ class BadasoGraphqlSetup extends Command
                 $this->force = false;
             }
 
-            $this->publishLightHouse();
+            $this->vendorPublish();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
 
-    public function publishLightHouse()
+    public function vendorPublish()
     {
-        $this->call('php artisan vendor:publish', [
-            '--tag' => 'lighthouse-schema',
+        $this->call('vendor:publish', [
+            '--tag' => 'badaso-graphql',
+            '--force' => $this->force,
         ]);
-        $this->call('php artisan vendor:publish', [
-            '--tag' => 'graphql-playground-config',
+
+        $this->call('vendor:publish', [
+            '--tag' => 'badaso-graphql-seeder',
+            '--force' => $this->force,
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag' => 'badaso-graphql-seeder',
+            '--force' => $this->force,
         ]);
     }
 }

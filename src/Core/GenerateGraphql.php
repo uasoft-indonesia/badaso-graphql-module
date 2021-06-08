@@ -7,11 +7,10 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Nuwave\Lighthouse\Schema\TypeRegistry;
 use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Models\DataType;
 
-class GenerateTypeGraphql
+class GenerateGraphql
 {
     public static $createInputType = 'CreateInputType';
     public static $updateInputType = 'UpdateInputType';
@@ -20,15 +19,26 @@ class GenerateTypeGraphql
     public static $readType = 'Read';
     public static $queryType = 'Query';
     public static $mutationType = 'Mutation';
-    public $type_registry;
+    public $accommodate;
+    public $accommodateBadasoGraphQL;
     public $data_types;
     public $graphql_data_type;
 
-    public function __construct(TypeRegistry $type_registry)
+    public function __construct()
     {
         $this->data_types = DataType::all();
-        $this->type_registry = $type_registry;
         $this->graphql_data_type = [];
+
+        // AccommodateClassRegister
+        $this->accommodate = config('badaso-graphql.accommodate_badaso_graphql_class');
+        $this->accommodateBadasoGraphQL = new $this->accommodate();
+
+        // Custom Type
+        foreach ($this->accommodateBadasoGraphQL->registerType() as $index => $registerType) {
+            $type_class = new $registerType();
+            $type_class->setGenerateGraphQL($this);
+            $this->graphql_data_type = array_merge($this->graphql_data_type, $type_class->getType());
+        }
     }
 
     private function saveToGraphQLDataType($table_name, $key, $value)
@@ -36,7 +46,7 @@ class GenerateTypeGraphql
         $this->graphql_data_type[$table_name][$key] = $value;
     }
 
-    private function setToGraphQLDataType($table_name, $type_name, $object_type)
+    public function setToGraphQLDataType($table_name, $type_name, $object_type)
     {
         if (!array_key_exists($table_name, $this->graphql_data_type)) {
             $this->graphql_data_type[$table_name] = [];
@@ -44,7 +54,6 @@ class GenerateTypeGraphql
 
         if (!array_key_exists($type_name, $this->graphql_data_type[$table_name])) {
             $this->saveToGraphQLDataType($table_name, $type_name, $object_type);
-            $this->type_registry->register($object_type);
         }
     }
 
@@ -53,9 +62,19 @@ class GenerateTypeGraphql
         $data_types = $this->data_types;
         $fields_query = [];
         $fields_mutations = [];
-        foreach ($data_types as $key => $data_type) {
-            $fields_query = (new GenerateQueryGraphql($this->graphql_data_type, $data_type, $fields_query))->handle();
-            $fields_mutations = (new GenerateMutationGraphql($this->graphql_data_type, $data_type, $fields_mutations))->handle();
+        foreach ($data_types as $index => $data_type) {
+            $generate_query_graphql = config('badaso-graphql.class.generate_query_graphql');
+            $fields_query = (new $generate_query_graphql($this->graphql_data_type, $data_type, $fields_query))->handle();
+
+            $generate_mutation_graphql = config('badaso-graphql.class.generate_mutation_graphql');
+            $fields_mutations = (new $generate_mutation_graphql($this->graphql_data_type, $data_type, $fields_mutations))->handle();
+        }
+
+        // Custom Query
+        foreach ($this->accommodateBadasoGraphQL->registerQuery() as $index => $registerQuery) {
+            $mutation_type_class = new $registerQuery();
+            $mutation_type_class->setGenerateGraphQL($this, $fields_query);
+            $fields_query = array_merge($fields_query, $mutation_type_class->getFieldQuery());
         }
 
         // Query
@@ -65,7 +84,13 @@ class GenerateTypeGraphql
             'fields' => $fields_query,
         ]);
         $this->graphql_data_type[$name_query] = $object_query;
-        $this->type_registry->register($object_query);
+
+        // Custom Mutation
+        foreach ($this->accommodateBadasoGraphQL->registerMutation() as $index => $registerMutation) {
+            $mutation_type_class = new $registerMutation();
+            $mutation_type_class->setGenerateGraphQL($this, $fields_mutations);
+            $fields_mutations = array_merge($fields_mutations, $mutation_type_class->getFieldMutation());
+        }
 
         // Mutation
         $name_mutation = self::$mutationType;
@@ -74,7 +99,6 @@ class GenerateTypeGraphql
             'fields' => $fields_mutations,
         ]);
         $this->graphql_data_type[$name_mutation] = $object_mutation;
-        $this->type_registry->register($object_mutation);
     }
 
     private function generateRelationModelType($field_name_types, $fields, $type_name)
@@ -270,7 +294,6 @@ class GenerateTypeGraphql
         ]);
 
         $this->saveToGraphQLDataType($table_name, $input_type_name, $object_type_create_input_type);
-        $this->type_registry->register($object_type_create_input_type);
     }
 
     private function generateType(DataType $data_type)
@@ -285,13 +308,11 @@ class GenerateTypeGraphql
         }
     }
 
-    public function handle(): TypeRegistry
+    public function handle()
     {
         foreach ($this->data_types as $index => $data_type) {
             $this->generateType($data_type);
         }
         $this->generateQueryAndMutation();
-
-        return $this->type_registry;
     }
 }

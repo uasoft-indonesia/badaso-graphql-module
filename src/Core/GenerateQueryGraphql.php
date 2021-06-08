@@ -4,18 +4,21 @@ namespace Uasoft\Badaso\Module\Graphql\Core;
 
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
+use Uasoft\Badaso\Module\Graphql\Traits\PermissionForCRUDTrait;
 
-class GenerateQueryGraphql
+class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
 {
-    private $fields_query;
-    private $data_type;
-    private $graphql_data_type;
-    private $table_name;
-    private $create_input_type;
-    private $update_input_type;
-    private $delete_input_type;
-    private $read_type;
-    private $browse_type;
+    use PermissionForCRUDTrait;
+
+    protected $fields_query;
+    protected $data_type;
+    protected $graphql_data_type;
+    protected $table_name;
+    protected $create_input_type;
+    protected $update_input_type;
+    protected $delete_input_type;
+    protected $read_type;
+    protected $browse_type;
 
     public function __construct($graphql_data_type, $data_type, $fields_query)
     {
@@ -26,12 +29,19 @@ class GenerateQueryGraphql
         $this->graphql_data_type = $this->graphql_data_type[$this->table_name];
 
         [
-            GenerateTypeGraphql::$createInputType => $this->create_input_type,
-            GenerateTypeGraphql::$updateInputType => $this->update_input_type,
-            GenerateTypeGraphql::$deleteInputType => $this->delete_input_type,
-            GenerateTypeGraphql::$readType => $this->read_type,
-            GenerateTypeGraphql::$browseType => $this->browse_type,
+            GenerateGraphql::$createInputType => $this->create_input_type,
+            GenerateGraphql::$updateInputType => $this->update_input_type,
+            GenerateGraphql::$deleteInputType => $this->delete_input_type,
+            GenerateGraphql::$readType => $this->read_type,
+            GenerateGraphql::$browseType => $this->browse_type,
         ] = $this->graphql_data_type;
+
+        $this->customizeFieldQuery();
+    }
+
+    protected function customizeFieldQuery()
+    {
+        // todo customize fields query
     }
 
     public function generateFindQuery()
@@ -43,6 +53,8 @@ class GenerateQueryGraphql
                 'id' => Type::nonNull(Type::id()),
             ],
             'resolve' => function ($rootValue, $args) {
+                $this->permissionCrud('read');
+
                 return DB::table($this->table_name)->find($args['id']);
             },
         ];
@@ -55,6 +67,8 @@ class GenerateQueryGraphql
             return [
                 'type' => Type::listOf($this->browse_type),
                 'resolve' => function ($rootValue, $args) {
+                    $this->permissionCrud('browse');
+
                     return DB::table($this->table_name)->get();
                 },
             ];

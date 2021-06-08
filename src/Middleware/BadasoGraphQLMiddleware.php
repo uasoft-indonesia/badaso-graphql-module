@@ -11,25 +11,6 @@ class BadasoGraphQLMiddleware
     {
         $response = $next($request);
 
-        $path_url = $request->path();
-        switch ($path_url) {
-            case $this->pathAccess('/v1/crud/add'):
-
-                break;
-
-            default:
-                // code...
-                break;
-        }
-
         return $response;
-    }
-
-    private function pathAccess($path)
-    {
-        $api_route_prefix = config('badaso.api_route_prefix');
-        $path = "{$api_route_prefix}{$path}";
-
-        return $path;
     }
 }
