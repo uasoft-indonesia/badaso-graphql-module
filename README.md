@@ -42,7 +42,7 @@ return [
 
 ```
 ### How Create New Query  
-1. Create new class in `BadasoGraphQL/Query`
+1. Create new class in `App/BadasoGraphQL/Query`
 2. Implements from new class with ` Uasoft\Badaso\Module\Graphql\Interfaces\GenerateQueryInterface` 
 3. There are two method must be created
 ```
@@ -106,7 +106,7 @@ class ExampleQuery implements GenerateQueryInterface
 5. For `getFieldQuery()` for result array, you can customize according to the following [graphql-php/schema-definition](https://webonyx.github.io/graphql-php/schema-definition/ ) only in the query fields element array 
 
 ### How create new mutation
-1. Create new class in `BadasoGraphQL/Mutation`
+1. Create new class in `App/BadasoGraphQL/Mutation`
 2. Implements from new class with ` Uasoft\Badaso\Module\Graphql\Interfaces\GenerateMutationInterface` 
 3. There are two method must be created
 ```
@@ -171,7 +171,7 @@ class ExampleMutation implements GenerateMutationInterface
 5. For `getFieldMutation()` for result array, you can customize according to the following [graphql-php/schema-definition](https://webonyx.github.io/graphql-php/schema-definition/ ) only in the mutation fields element array 
 
 ### How create new type  
-1. Create new class in `BadasoGraphQL/Type`
+1. Create new class in `App/BadasoGraphQL/Type`
 2. Implements from new class with ` Uasoft\Badaso\Module\Graphql\Interfaces\GenerateTypeInterface` 
 3. There are two method must be created
 ```
