@@ -60,7 +60,7 @@ class BadasoGraphqlSetup extends Command
         ]);
 
         $this->call('vendor:publish', [
-            '--tag' => 'badaso-graphql-seeder',
+            '--tag' => 'badaso-graphql-config',
             '--force' => $this->force,
         ]);
 

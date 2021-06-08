@@ -12,21 +12,21 @@ class AccommodateBadasoGraphQL implements AccommodateHandleInterface
     public function registerType(): array
     {
         return [
-            // ExampleType::class,
+            ExampleType::class,
         ];
     }
 
     public function registerQuery(): array
     {
         return [
-            // ExampleQuery::class,
+            ExampleQuery::class,
         ];
     }
 
     public function registerMutation(): array
     {
         return [
-            // ExampleMutation::class,
+            ExampleMutation::class,
         ];
     }
 }

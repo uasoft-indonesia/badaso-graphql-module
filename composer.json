@@ -23,7 +23,7 @@
   "type": "library",
   "require": {
     "mll-lab/laravel-graphql-playground": "^2.5",
-    "nuwave/lighthouse": "^5.12"
+    "webonyx/graphql-php": "^14.8"
   },
   "authors": [
     {
@@ -34,7 +34,8 @@
   "minimum-stability": "alpha",
   "autoload": {
     "psr-4": {
-      "Uasoft\\Badaso\\Module\\Graphql\\": "src/"
+      "Uasoft\\Badaso\\Module\\Graphql\\": "src/",
+      "Uasoft\\Badaso\\Module\\Graphql\\Interfaces": "src/Interfaces/"
     }
   },
   "extra": {
