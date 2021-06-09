@@ -11,9 +11,9 @@ trait PermissionForCRUDTrait
     {
         $data_type = $this->data_type;
         $continue = AuthenticatedUser::ignore($action.'_'.$data_type->name);
-        if (!$continue) {
+        if (! $continue) {
             $continue = AuthenticatedUser::isAllowedTo($action.'_'.$data_type->name);
-            if (!$continue) {
+            if (! $continue) {
                 throw new UserError(__('badaso::api_response.403'));
             }
         }
