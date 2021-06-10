@@ -68,5 +68,9 @@ class BadasoGraphqlSetup extends Command
             '--tag' => 'badaso-graphql-seeder',
             '--force' => $this->force,
         ]);
+
+        $this->call('vendor:publish', [
+            '--tag' => 'graphql-playground-config',
+        ]);
     }
 }
