@@ -48,11 +48,11 @@ class GenerateGraphql
 
     public function setToGraphQLDataType($table_name, $type_name, $object_type)
     {
-        if (!array_key_exists($table_name, $this->graphql_data_type)) {
+        if (! array_key_exists($table_name, $this->graphql_data_type)) {
             $this->graphql_data_type[$table_name] = [];
         }
 
-        if (!array_key_exists($type_name, $this->graphql_data_type[$table_name])) {
+        if (! array_key_exists($type_name, $this->graphql_data_type[$table_name])) {
             $this->saveToGraphQLDataType($table_name, $type_name, $object_type);
         }
     }
@@ -127,7 +127,7 @@ class GenerateGraphql
                     && $destination_table_column
                     && $destination_table_display_column
                 ) {
-                    if (!array_key_exists($destination_table, $this->graphql_data_type)) {
+                    if (! array_key_exists($destination_table, $this->graphql_data_type)) {
                         // get data type (table data)
                         $data_type = $this->data_types->where('name', $destination_table);
 
@@ -166,7 +166,7 @@ class GenerateGraphql
                         case 'belongs_to':
                             $fields[$destination_table] = [
                                 'type' => $graphql_data_type[self::$browseType],
-                                'resolve' => function ($rootValue, $args) use ($destination_table,  $destination_table_column, $field_data_row) {
+                                'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->first();
 
@@ -179,7 +179,7 @@ class GenerateGraphql
                             // replace this
                             $fields[$destination_table] = [
                                 'type' => $graphql_data_type[self::$browseType],
-                                'resolve' => function ($rootValue, $args) use ($destination_table,  $destination_table_column, $field_data_row) {
+                                'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->first();
 
@@ -192,7 +192,7 @@ class GenerateGraphql
                             // replace this
                             $fields[$destination_table] = [
                                 'type' => $graphql_data_type[self::$browseType],
-                                'resolve' => function ($rootValue, $args) use ($destination_table,  $destination_table_column, $field_data_row) {
+                                'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->get();
 
