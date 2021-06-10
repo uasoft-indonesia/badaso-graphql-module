@@ -37,7 +37,7 @@ class BadasoGraphqlModuleServiceProvider extends ServiceProvider
         ], 'badaso-graphql-config');
 
         $this->publishes([
-            __DIR__.'/../Seeder' => database_path('seeds/Badaso'),
+            __DIR__.'/../Seeder' => database_path('seeders/Badaso'),
         ], 'badaso-graphql-seeder');
 
         $this->publishes([
