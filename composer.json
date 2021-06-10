@@ -34,8 +34,7 @@
   "minimum-stability": "alpha",
   "autoload": {
     "psr-4": {
-      "Uasoft\\Badaso\\Module\\Graphql\\": "src/",
-      "Uasoft\\Badaso\\Module\\Graphql\\Interfaces": "src/Interfaces/"
+      "Uasoft\\Badaso\\Module\\Graphql\\": "src/"
     }
   },
   "extra": {
