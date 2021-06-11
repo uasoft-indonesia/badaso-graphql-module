@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Badaso\GraphQL;
 
 use Illuminate\Database\Seeder;
 
