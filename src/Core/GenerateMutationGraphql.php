@@ -36,6 +36,8 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
             GenerateGraphql::$browseType => $this->browse_type,
         ] = $this->graphql_data_type;
 
+
+
         $this->customizeFieldMutation();
     }
 
@@ -47,7 +49,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateCreateMutation()
     {
         // generate create
-        $this->fields_mutations[$this->table_name.'_create'] = [
+        $this->fields_mutations[$this->table_name . '_create'] = [
             'type' => $this->read_type,
             'args' => [
                 'input' => $this->create_input_type,
@@ -61,9 +63,9 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
                     $stored_data = $this->insertData($data_create, $this->data_type);
 
                     activity($this->data_type->display_name_singular)
-                    ->causedBy(auth()->user() ?? null)
-                    ->withProperties(['attributes' => $stored_data])
-                    ->log($this->data_type->display_name_singular.' has been created');
+                        ->causedBy(auth()->user() ?? null)
+                        ->withProperties(['attributes' => $stored_data])
+                        ->log($this->data_type->display_name_singular . ' has been created');
 
                     DB::commit();
 
@@ -79,7 +81,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateUpdateMutation()
     {
         // generate update
-        $this->fields_mutations[$this->table_name.'_update'] = [
+        $this->fields_mutations[$this->table_name . '_update'] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::string(),
@@ -97,12 +99,12 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
                     $updated = $this->updateData($data_update, $this->data_type)['updated_data'];
 
                     activity($this->data_type->display_name_singular)
-                    ->causedBy(auth()->user() ?? null)
-                    ->withProperties([
-                        'old' => $updated['old_data'],
-                        'attributes' => $updated['updated_data'],
-                    ])
-                    ->log($this->data_type->display_name_singular.' has been updated');
+                        ->causedBy(auth()->user() ?? null)
+                        ->withProperties([
+                            'old' => $updated['old_data'],
+                            'attributes' => $updated['updated_data'],
+                        ])
+                        ->log($this->data_type->display_name_singular . ' has been updated');
 
                     DB::commit();
 
@@ -118,7 +120,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateDeleteMutation()
     {
         // generate delete
-        $this->fields_mutations[$this->table_name.'_delete'] = [
+        $this->fields_mutations[$this->table_name . '_delete'] = [
             'type' => Type::string(),
             'args' => [
                 'id' => Type::string(),
@@ -131,9 +133,9 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
                     $this->deleteData($args, $this->data_type);
 
                     activity($this->data_type->display_name_singular)
-                    ->causedBy(auth()->user() ?? null)
-                    ->withProperties($args)
-                    ->log($this->data_type->display_name_singular.' has been deleted');
+                        ->causedBy(auth()->user() ?? null)
+                        ->withProperties($args)
+                        ->log($this->data_type->display_name_singular . ' has been deleted');
 
                     DB::commit();
 
