@@ -24,7 +24,7 @@ class MetaType implements GenerateTypeInterface
                         'type' => Type::string(),
                         'resolve' => function ($rootValue, $args) {
                             return Storage::url('/');
-                        }
+                        },
                     ],
                 ],
             ]),
