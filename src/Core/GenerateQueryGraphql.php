@@ -47,7 +47,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateFindQuery()
     {
         // @find with id
-        $this->fields_query[$this->table_name . '_find'] = [
+        $this->fields_query[$this->table_name.'_find'] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::nonNull(Type::id()),

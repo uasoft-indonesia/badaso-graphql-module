@@ -6,7 +6,6 @@ use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use Illuminate\Http\Request;
 use Uasoft\Badaso\Helpers\ApiResponse;
-use Uasoft\Badaso\Helpers\CaseConvert;
 
 class BadasoGraphqlController extends Controller
 {
