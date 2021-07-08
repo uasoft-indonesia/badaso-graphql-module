@@ -39,6 +39,16 @@ class GenerateGraphql
             $type_class->setGenerateGraphQL($this);
             $this->graphql_data_type = array_merge($this->graphql_data_type, $type_class->getType());
         }
+
+        // Custom Type From Core
+        foreach (scandir(__DIR__.'/Type') as $index => $registerType) {
+            if ($index >= 2) {
+                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Type\\'.str_replace('.php', '', $registerType);
+                $type_class = new $name_class();
+                $type_class->setGenerateGraphQL($this);
+                $this->graphql_data_type = array_merge($this->graphql_data_type, $type_class->getType());
+            }
+        }
     }
 
     private function saveToGraphQLDataType($table_name, $key, $value)
@@ -72,9 +82,19 @@ class GenerateGraphql
 
         // Custom Query
         foreach ($this->accommodateBadasoGraphQL->registerQuery() as $index => $registerQuery) {
-            $mutation_type_class = new $registerQuery();
-            $mutation_type_class->setGenerateGraphQL($this, $fields_query);
-            $fields_query = array_merge($fields_query, $mutation_type_class->getFieldQuery());
+            $query_type_class = new $registerQuery();
+            $query_type_class->setGenerateGraphQL($this, $fields_query);
+            $fields_query = array_merge($fields_query, $query_type_class->getFieldQuery());
+        }
+
+        // Custom Query From Core
+        foreach (scandir(__DIR__.'/Query') as $index => $registerType) {
+            if ($index >= 2) {
+                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Query\\'.str_replace('.php', '', $registerType);
+                $query_type_class = new $name_class();
+                $query_type_class->setGenerateGraphQL($this, $fields_query);
+                $fields_query = array_merge($fields_query, $query_type_class->getFieldQuery());
+            }
         }
 
         // Query
@@ -90,6 +110,16 @@ class GenerateGraphql
             $mutation_type_class = new $registerMutation();
             $mutation_type_class->setGenerateGraphQL($this, $fields_mutations);
             $fields_mutations = array_merge($fields_mutations, $mutation_type_class->getFieldMutation());
+        }
+
+        // Custom Mutation From Core
+        foreach (scandir(__DIR__.'/Mutation') as $index => $registerType) {
+            if ($index >= 2) {
+                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Mutation\\'.str_replace('.php', '', $registerType);
+                $mutation_type_class = new $name_class();
+                $mutation_type_class->setGenerateGraphQL($this, $fields_mutations);
+                $fields_mutations = array_merge($fields_mutations, $mutation_type_class->getFieldMutation());
+            }
         }
 
         // Mutation
@@ -213,8 +243,10 @@ class GenerateGraphql
         $name_type = ucwords(CaseConvert::camel($table_name.$type_name));
         $field_name_types = $data_rows->filter(function ($data_row) use ($type_name) {
             switch ($type_name) {
-                case self::$browseType: return $data_row->browse;
-                case self::$readType: return $data_row->read;
+                case self::$browseType:
+                    return $data_row->browse;
+                case self::$readType:
+                    return $data_row->read;
             }
         });
 
@@ -303,6 +335,7 @@ class GenerateGraphql
         foreach ([self::$createInputType, self::$updateInputType, self::$deleteInputType] as $index => $input_type_name) {
             $this->generateInputType($table_name, $data_rows, $input_type_name);
         }
+
         foreach ([self::$browseType, self::$readType] as $key => $input_type_name) {
             $this->generateModelType($table_name, $data_rows, $input_type_name);
         }

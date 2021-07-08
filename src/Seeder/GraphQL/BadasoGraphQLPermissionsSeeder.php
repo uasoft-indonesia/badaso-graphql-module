@@ -5,7 +5,7 @@ namespace Database\Seeders\Badaso\GraphQL;
 use Illuminate\Database\Seeder;
 use Uasoft\Badaso\Models\Permission;
 
-class GraphQLPermissionsSeeder extends Seeder
+class BadasoGraphQLPermissionsSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
