@@ -5,7 +5,7 @@ use Uasoft\Badaso\Models\Permission;
 use Uasoft\Badaso\Models\Role;
 use Uasoft\Badaso\Models\RolePermission;
 
-class GraphQLRolePermissionsSeeder extends Seeder
+class BadasoGraphQLRolePermissionsSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -23,7 +23,7 @@ class GraphQLRolePermissionsSeeder extends Seeder
 
             $permissions = Permission::all();
 
-            if (! is_null($administrator)) {
+            if (!is_null($administrator)) {
                 foreach ($permissions as $row) {
                     $role_permission = RolePermission::where('role_id', $administrator->id)
                             ->where('permission_id', $row->id)

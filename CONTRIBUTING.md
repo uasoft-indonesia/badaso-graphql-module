@@ -48,8 +48,8 @@ After getting the license, you can proceed to Badaso installation.
 - Root Laravel Project
   - /packages (Folder Packages)
     - /uasoft-indonesia (Folder Uasoft Indonesia)
-      - badaso (Badaso Library) 
-      - badaso-graphql-module (Cloud Badaso Graphql Manager)
+      - core (Badaso Core Library) 
+      - graphql-module (Cloud Badaso Graphql Manager)
     - ...
   - ...
 - ...
@@ -74,14 +74,14 @@ git clone https://github.com/uasoft-indonesia/badaso-graphql-module.git
 "autoload": {
     "psr-4": {
         "App\\": "app/",
-        "Uasoft\\Badaso\\": "packages/uasoft-indonesia/badaso/src/",
-        "Uasoft\\Badaso\\Module\\Graphql\\": "packages/uasoft-indonesia/badaso-graphql-module/src/",
+        "Uasoft\\Badaso\\": "packages/badaso/core/src/",
+        "Uasoft\\Badaso\\Module\\Graphql\\": "packages/badaso/graphql-module/src/",
     },
     ...
 }
 ```
 
-5. Copy required library from ```packages/uasoft-indonesia/badaso-graphql-module/composer.json``` to ```/composer.json``` then ```composer install```
+5. Copy required library from ```packages/badaso/graphql-module/composer.json``` to ```/composer.json``` then ```composer install```
 
 6. Run the following commands in sequence.
 ```
@@ -102,13 +102,13 @@ php artisan badaso-graphql:setup --force
 composer dump-autoload
 ```
 
-9. Call command `php artisan db:seed --class=GraphqlModuleSeeder`
+9. Call command `php artisan db:seed --class=BadasoGraphqlModuleSeeder`
 
 10. Open the ```env``` file then add the following lines.
 ```
 MIX_DEFAULT_MENU=admin
-MIX_BADASO_MENU=${MIX_DEFAULT_MENU},badaso-graphql-module
-MIX_BADASO_MODULES=badaso-graphql-module
+MIX_BADASO_MENU=${MIX_DEFAULT_MENU},graphql-module
+MIX_BADASO_MODULES=graphql-module
 
 MIX_GRAPHQL_PREFIX_URI="/graphql-playground"
 ```

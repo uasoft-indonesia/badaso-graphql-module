@@ -14,7 +14,7 @@ MIX_GRAPHQL_PREFIX_URI="/graphql-playground"
 3. Call command `php artisan migrate`
 4. Call command `php artisan badaso-graphql:setup` or `php artisan badaso-graphql:setup --force` if you want to overwrite the file 
 5. Call command `composer dump-autoload`
-6. Call command `php artisan db:seed --class=GraphqlModuleSeeder`
+6. Call command `php artisan db:seed --class=BadasoGraphqlModuleSeeder`
 7. For test graphql, go to admin dashboard and menu item Graphql Playground
 
 ### Config badaso-graphql.php

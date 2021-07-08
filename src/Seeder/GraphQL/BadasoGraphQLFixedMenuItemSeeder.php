@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Uasoft\Badaso\Models\MenuItem;
 
-class GraphQLFixedMenuItemSeeder extends Seeder
+class BadasoGraphQLFixedMenuItemSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -17,7 +17,7 @@ class GraphQLFixedMenuItemSeeder extends Seeder
         \DB::beginTransaction();
 
         try {
-            $menus = \DB::table('menus')->where('key', 'badaso-GraphQL-module')->first();
+            $menus = \DB::table('menus')->where('key', 'graphql-module')->first();
             $menu_id = $menus->id;
 
             $add_menus_item = [
