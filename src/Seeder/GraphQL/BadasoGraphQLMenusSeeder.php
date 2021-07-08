@@ -5,7 +5,7 @@ namespace Database\Seeders\Badaso\GraphQL;
 use Illuminate\Database\Seeder;
 use Uasoft\Badaso\Models\Menu;
 
-class GraphQLMenusSeeder extends Seeder
+class BadasoGraphQLMenusSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -20,7 +20,7 @@ class GraphQLMenusSeeder extends Seeder
 
         try {
             $new_menus = [
-                'key' => 'badaso-graphql-module',
+                'key' => 'graphql-module',
                 'display_name' => 'GraphQL Menu',
                 'created_at' => '2021-01-01 15:26:06',
                 'updated_at' => '2021-01-01 15:26:06',
