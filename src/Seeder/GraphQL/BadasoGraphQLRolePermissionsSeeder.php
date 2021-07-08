@@ -5,7 +5,7 @@ use Uasoft\Badaso\Models\Permission;
 use Uasoft\Badaso\Models\Role;
 use Uasoft\Badaso\Models\RolePermission;
 
-class GraphQLRolePermissionsSeeder extends Seeder
+class BadasoGraphQLRolePermissionsSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
