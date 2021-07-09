@@ -1,13 +1,13 @@
-# badaso-graphql-module
+# graphql-module
 
 ## How to installation graphql manager module
 1. <a href="https://badaso-docs.uatech.co.id/docs/en/getting-started/installation/" target="blank"> Install Badaso </a> from laravel project
-2. Install badaso graphql module `composer require uasoft-indonesia/badaso-graphql-module` 
+2. Install badaso graphql module `composer require badaso/core` 
 3. Set env
 ```
 MIX_DEFAULT_MENU=admin
-MIX_BADASO_MENU=${MIX_DEFAULT_MENU},badaso-graphql-module
-MIX_BADASO_MODULES=badaso-graphql-module
+MIX_BADASO_MENU=${MIX_DEFAULT_MENU},graphql-module
+MIX_BADASO_MODULES=graphql-module
 
 MIX_GRAPHQL_PREFIX_URI="/graphql-playground"
 ```
