@@ -1,4 +1,4 @@
-# graphql-module
+# badaso/graphql-module
 
 ## How to installation graphql manager module
 1. <a href="https://badaso-docs.uatech.co.id/docs/en/getting-started/installation/" target="blank"> Install Badaso </a> from laravel project
