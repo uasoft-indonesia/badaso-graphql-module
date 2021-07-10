@@ -1,7 +1,7 @@
 {
-  "version": "v2.0.0-rc.1",
   "name": "badaso/graphql-module",
-  "description": "Zero development for blog system on badaso",
+  "version": "v2.0.0-rc.1",
+  "description": "Use GraphQL on Badaso",
   "keywords": [
     "laravel",
     "admin",
@@ -10,7 +10,7 @@
     "pwa",
     "vue",
     "generator",
-    "blog",
+    "graphql",
     "badaso"
   ],
   "license": "proprietary",
