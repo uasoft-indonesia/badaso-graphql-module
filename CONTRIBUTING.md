@@ -56,7 +56,7 @@ After getting the license, you can proceed to Badaso installation.
 
 cd into uasoft-indonesia directory, then run
 ```
-git clone https://github.com/uasoft-indonesia/badaso-graphql-module.git
+git clone https://github.com/uasoft-indonesia/badaso-graphql-module.git graphql-module
 ```
 
 2. Add the following Badaso provider to ```/config/app.php```.
