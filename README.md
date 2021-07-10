@@ -1,18 +1,17 @@
-# badaso-graphql-module
+# badaso/graphql-module
 
 ## How to installation graphql manager module
-1. <a href="https://badaso-docs.uatech.co.id/docs/en/getting-started/installation/" target="blank"> Install Badaso </a> from laravel project
-2. Install badaso graphql module `composer require uasoft-indonesia/badaso-graphql-module` 
-3. Set env
+1. Install badaso graphql module `composer require badaso/graphql-module` 
+2. Set env
 ```
 MIX_DEFAULT_MENU=admin
-MIX_BADASO_MENU=${MIX_DEFAULT_MENU},badaso-graphql-module
-MIX_BADASO_MODULES=badaso-graphql-module
+MIX_BADASO_MENU=${MIX_DEFAULT_MENU},graphql-module
+MIX_BADASO_MODULES=graphql-module
 
 MIX_GRAPHQL_PREFIX_URI="/graphql-playground"
 ```
 3. Call command `php artisan migrate`
-4. Call command `php artisan badaso-graphql:setup` or `php artisan badaso-graphql:setup --force` if you want to overwrite the file 
+4. Call command `php artisan badaso-graphql:setup`
 5. Call command `composer dump-autoload`
 6. Call command `php artisan db:seed --class=BadasoGraphqlModuleSeeder`
 7. For test graphql, go to admin dashboard and menu item Graphql Playground
