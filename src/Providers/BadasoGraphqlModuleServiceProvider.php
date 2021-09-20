@@ -39,10 +39,6 @@ class BadasoGraphqlModuleServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../Seeder' => database_path('seeders/Badaso'),
         ], 'badaso-graphql-seeder');
-
-        $this->publishes([
-            __DIR__.'/../BadasoGraphQL' => app_path('BadasoGraphQL'),
-        ], 'badaso-graphql');
     }
 
     /**

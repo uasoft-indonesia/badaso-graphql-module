@@ -4,6 +4,7 @@ namespace Uasoft\Badaso\Module\Graphql\Core;
 
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
+use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Module\Graphql\Traits\PermissionForCRUDTrait;
 
 class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
@@ -47,7 +48,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateFindQuery()
     {
         // @find with id
-        $this->fields_query[$this->table_name.'_find'] = [
+        $this->fields_query[CaseConvert::camel($this->table_name . '_find')] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::nonNull(Type::id()),

@@ -5,6 +5,7 @@ namespace Uasoft\Badaso\Module\Graphql\Core;
 use GraphQL\Error\UserError;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
+use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Module\Graphql\Traits\PermissionForCRUDTrait;
 
 class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
@@ -47,7 +48,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateCreateMutation()
     {
         // generate create
-        $this->fields_mutations[$this->table_name.'_create'] = [
+        $this->fields_mutations[CaseConvert::camel($this->table_name.'_create')] = [
             'type' => $this->read_type,
             'args' => [
                 'input' => $this->create_input_type,
@@ -79,7 +80,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateUpdateMutation()
     {
         // generate update
-        $this->fields_mutations[$this->table_name.'_update'] = [
+        $this->fields_mutations[CaseConvert::camel($this->table_name . '_update')] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::string(),
@@ -118,7 +119,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateDeleteMutation()
     {
         // generate delete
-        $this->fields_mutations[$this->table_name.'_delete'] = [
+        $this->fields_mutations[CaseConvert::camel($this->table_name.'_delete')] = [
             'type' => Type::string(),
             'args' => [
                 'id' => Type::string(),
