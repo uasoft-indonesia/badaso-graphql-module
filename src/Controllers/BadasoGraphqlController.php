@@ -12,7 +12,7 @@ class BadasoGraphqlController extends Controller
     public function graphql(Request $request)
     {
         try {
-            $class_generate_graphql = config('badaso-graphql.class.generate_graphql');
+            $class_generate_graphql = config('badaso-graphql-customize.core.generate_graphql');
 
             $graphql_generate = new $class_generate_graphql();
             $graphql_generate->handle();

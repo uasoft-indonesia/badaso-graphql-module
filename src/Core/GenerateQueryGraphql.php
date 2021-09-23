@@ -21,20 +21,21 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     protected $read_type;
     protected $browse_type;
 
-    public function __construct($graphql_data_type, $data_type, $fields_query)
+    public function __construct($generate_graphql, $data_type, $fields_query)
     {
-        $this->graphql_data_type = $graphql_data_type;
+        $this->generate_graphql = $generate_graphql ;
+        $this->graphql_data_type = $generate_graphql->graphql_data_type;
         $this->data_type = $data_type;
         $this->fields_query = $fields_query;
         $this->table_name = $this->data_type->name;
         $this->graphql_data_type = $this->graphql_data_type[$this->table_name];
 
         [
-            GenerateGraphql::$createInputType => $this->create_input_type,
-            GenerateGraphql::$updateInputType => $this->update_input_type,
-            GenerateGraphql::$deleteInputType => $this->delete_input_type,
-            GenerateGraphql::$readType => $this->read_type,
-            GenerateGraphql::$browseType => $this->browse_type,
+            GenerateGraphql::$CREATE_INPUT_TYPE => $this->create_input_type,
+            GenerateGraphql::$UPDATE_INPUT_TYPE => $this->update_input_type,
+            GenerateGraphql::$DELETE_INPUT_TYPE => $this->delete_input_type,
+            GenerateGraphql::$READ_TYPE => $this->read_type,
+            GenerateGraphql::$BROWSE_TYPE => $this->browse_type,
         ] = $this->graphql_data_type;
 
         $this->customizeFieldQuery();

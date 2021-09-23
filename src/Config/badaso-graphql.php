@@ -8,4 +8,7 @@ return [
         'generate_query_graphql' => \Uasoft\Badaso\Module\Graphql\Core\GenerateQueryGraphql::class,
         'generate_mutation_graphql' => \Uasoft\Badaso\Module\Graphql\Core\GenerateMutationGraphql::class,
     ],
+    "register" => [
+
+    ]
 ];
