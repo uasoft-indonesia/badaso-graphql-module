@@ -5,6 +5,7 @@ namespace Uasoft\Badaso\Module\Graphql\Core;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
 use Uasoft\Badaso\Helpers\CaseConvert;
+use Uasoft\Badaso\Module\Graphql\Core\Type\PaginateType;
 use Uasoft\Badaso\Module\Graphql\Traits\PermissionForCRUDTrait;
 
 class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
@@ -23,7 +24,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
 
     public function __construct($generate_graphql, $data_type, $fields_query)
     {
-        $this->generate_graphql = $generate_graphql ;
+        $this->generate_graphql = $generate_graphql;
         $this->graphql_data_type = $generate_graphql->graphql_data_type;
         $this->data_type = $data_type;
         $this->fields_query = $fields_query;
@@ -65,16 +66,31 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateAllQuery()
     {
         // @all
-        $this->fields_query[$this->table_name] = function () {
-            return [
-                'type' => Type::listOf($this->browse_type),
-                'resolve' => function ($rootValue, $args) {
-                    $this->permissionCrud('browse');
+        if ($this->data_type->server_side) {
+            $this->fields_query[$this->table_name] = function () {
+                return [
+                    'type' => new PaginateType($this->browse_type),
+                    'resolve' => function ($rootValue, $args) {
+                        $this->permissionCrud('browse');
 
-                    return DB::table($this->table_name)->get();
-                },
-            ];
-        };
+                        return DB::table($this->table_name)->simplePaginate(15)->toArray();
+                    },
+                ];
+            };
+        } else {
+            $this->fields_query[$this->table_name] = function () {
+                return [
+                    'type' => Type::listOf($this->browse_type),
+                    'resolve' => function ($rootValue, $args) {
+                        $this->permissionCrud('browse');
+
+                        return DB::table($this->table_name)->get();
+                    },
+                ];
+            };
+        }
+
+
     }
 
     public function handle()
