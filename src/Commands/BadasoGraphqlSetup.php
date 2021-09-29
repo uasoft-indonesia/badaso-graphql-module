@@ -55,6 +55,11 @@ class BadasoGraphqlSetup extends Command
     public function vendorPublish()
     {
         $this->call('vendor:publish', [
+            '--tag' => 'badaso-graphql',
+            '--force' => $this->force,
+        ]);
+
+        $this->call('vendor:publish', [
             '--tag' => 'badaso-graphql-config',
             '--force' => $this->force,
         ]);
