@@ -26,9 +26,14 @@ class BaseField
             'type' => $this->base_field_interface->getType(),
             'resolve' => function ($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) {
 
+                // handle before process
+                $this->base_field_interface->middlewareResolveHandle($objectValue, $args, $context, $info);
+
+                // handle process
                 $resolve = $this->base_field_interface->resolve($objectValue, $args, $context, $info);
 
-                return $resolve ;
+                // handle after process
+                return $this->base_field_interface->responseHandle($resolve);
             },
         ];
 
