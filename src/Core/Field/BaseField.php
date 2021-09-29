@@ -3,8 +3,6 @@
 namespace Uasoft\Badaso\Module\Graphql\Core\Field;
 
 use Uasoft\Badaso\Helpers\CaseConvert;
-use Uasoft\Badaso\Module\Graphql\Core\GenerateGraphql;
-use Uasoft\Badaso\Module\Graphql\Core\Test\BaseFieldInterface;
 
 class BaseField
 {
@@ -27,7 +25,10 @@ class BaseField
         $output =  [
             'type' => $this->base_field_interface->getType(),
             'resolve' => function ($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) {
-                return $this->base_field_interface->resolve($objectValue, $args, $context, $info);
+
+                $resolve = $this->base_field_interface->resolve($objectValue, $args, $context, $info);
+
+                return $resolve ;
             },
         ];
 
