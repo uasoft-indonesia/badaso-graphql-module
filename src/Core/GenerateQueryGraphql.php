@@ -82,6 +82,9 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
         $this->generateAllQuery();
         $this->generateFindQuery();
 
+        // add customize
+        $this->customizeFieldQuery();
+
         return $this->fields_query;
     }
 }

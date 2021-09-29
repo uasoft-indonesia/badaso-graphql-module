@@ -12,6 +12,6 @@ interface BaseFieldInterface
     public function getType();
     public function getArgs(): array;
     public function resolve($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info);
-    public function middlewareResolveHandle($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) : void ;
+    public function middlewareResolveHandle($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) ;
     public function responseHandle($resolve_result);
 }

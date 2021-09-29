@@ -155,6 +155,9 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
         $this->generateUpdateMutation();
         $this->generateDeleteMutation();
 
+        // add customize
+        $this->customizeFieldMutation();
+
         return $this->fields_mutations;
     }
 }

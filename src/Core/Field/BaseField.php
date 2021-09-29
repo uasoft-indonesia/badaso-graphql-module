@@ -3,6 +3,7 @@
 namespace Uasoft\Badaso\Module\Graphql\Core\Field;
 
 use Uasoft\Badaso\Helpers\CaseConvert;
+use Uasoft\Badaso\Module\Graphql\Core\Parameters\ResolveParameter;
 
 class BaseField
 {
@@ -24,13 +25,24 @@ class BaseField
     {
         $output =  [
             'type' => $this->base_field_interface->getType(),
-            'resolve' => function ($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) {
+            'resolve' => function ($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) {
+
 
                 // handle before process
-                $this->base_field_interface->middlewareResolveHandle($objectValue, $args, $context, $info);
+                $middleware_resolve = $this->base_field_interface->middlewareResolveHandle($object_value, $args, $context, $info);
+
+                if(!($middleware_resolve instanceof ResolveParameter)){
+                    return $middleware_resolve ;
+                }
+
+                // result and replace parameter resolve
+                $object_value = $middleware_resolve->object_value;
+                $args = $middleware_resolve->args ;
+                $context = $middleware_resolve->context ;
+                $info = $middleware_resolve->info ;
 
                 // handle process
-                $resolve = $this->base_field_interface->resolve($objectValue, $args, $context, $info);
+                $resolve = $this->base_field_interface->resolve($object_value, $args, $context, $info);
 
                 // handle after process
                 return $this->base_field_interface->responseHandle($resolve);

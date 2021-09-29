@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Uasoft\Badaso\Module\Graphql\Core\GenerateGraphql;
 use Uasoft\Badaso\Module\Graphql\Core\Interfaces\BaseFieldInterface;
+use Uasoft\Badaso\Module\Graphql\Core\Parameters\ResolveParameter;
 
 abstract class BaseFieldAbstract implements BaseFieldInterface
 {
@@ -23,13 +24,23 @@ abstract class BaseFieldAbstract implements BaseFieldInterface
         $this->graphql_data_type = $generate_graphql->graphql_data_type;
     }
 
-    public function middlewareResolveHandle($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) : void
+    protected function next($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) : ResolveParameter {
+        return new ResolveParameter($object_value, $args, $context, $info) ;
+    }
+
+    public function middlewareResolveHandle($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info)
     {
-        // to do code...
+
+        // to do code..
+
+        return $this->next($object_value, $args, $context, $info);
     }
 
     public function responseHandle($resolve_result)
     {
+
+        // to do code ..
+
         return $resolve_result;
     }
 }
