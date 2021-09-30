@@ -11,7 +11,7 @@ class PaginateType extends ObjectType
     public function __construct(ObjectType $dataType, string $key)
     {
         parent::__construct([
-            'name' => CaseConvert::camel('pagination_' . $key),
+            'name' => CaseConvert::camel('pagination_'.$key),
             'fields' => [
                 'data' => [
                     'type' => Type::listOf($dataType),
@@ -21,8 +21,8 @@ class PaginateType extends ObjectType
                 ],
                 'maxPage' => [
                     'type' => Type::int(),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 

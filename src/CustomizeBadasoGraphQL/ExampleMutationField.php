@@ -3,14 +3,12 @@
 namespace App\CustomizeBadasoGraphQL;
 
 use Uasoft\Badaso\Module\Graphql\Core\Abstracts\BaseFieldAbstract;
-use Uasoft\Badaso\Module\Graphql\Core\GenerateGraphql;
-use Uasoft\Badaso\Module\Graphql\Core\Interfaces\BaseFieldInterface;
 
 class ExampleMutationField extends BaseFieldAbstract
 {
     public function getName(): string
     {
-        return "exampleMutationField";
+        return 'exampleMutationField';
     }
 
     public function getType()

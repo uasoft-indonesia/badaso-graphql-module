@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'core' => [
         'generate_graphql' => \Uasoft\Badaso\Module\Graphql\Core\GenerateGraphql::class,
@@ -9,8 +8,8 @@ return [
     ],
 
     'type' => [
-       App\CustomizeBadasoGraphQL\Type\ExampleType::class,
-       App\CustomizeBadasoGraphQL\Type\ExampleInputType::class,
+        App\CustomizeBadasoGraphQL\Type\ExampleType::class,
+        App\CustomizeBadasoGraphQL\Type\ExampleInputType::class,
         // register type ...
     ],
 
