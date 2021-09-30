@@ -10,7 +10,6 @@ use Uasoft\Badaso\Module\Graphql\Core\Parameters\ResolveParameter;
 
 abstract class BaseFieldAbstract implements BaseFieldInterface
 {
-
     public GenerateGraphql $generate_graphql;
     public Request $request;
     public Collection $data_types;
@@ -24,8 +23,9 @@ abstract class BaseFieldAbstract implements BaseFieldInterface
         $this->graphql_data_type = $generate_graphql->graphql_data_type;
     }
 
-    protected function next($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) : ResolveParameter {
-        return new ResolveParameter($object_value, $args, $context, $info) ;
+    protected function next($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info): ResolveParameter
+    {
+        return new ResolveParameter($object_value, $args, $context, $info);
     }
 
     public function middlewareResolveHandle($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info)

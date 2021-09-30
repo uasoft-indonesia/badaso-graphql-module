@@ -5,11 +5,11 @@ namespace App\CustomizeBadasoGraphQL;
 use GraphQL\Type\Definition\Type;
 use Uasoft\Badaso\Module\Graphql\Core\Abstracts\BaseFieldAbstract;
 
-class ExampleQueryField extends BaseFieldAbstract {
-
+class ExampleQueryField extends BaseFieldAbstract
+{
     public function getName(): string
     {
-        return "exampleFieldQuery";
+        return 'exampleFieldQuery';
     }
 
     public function getType()
@@ -45,7 +45,7 @@ class ExampleQueryField extends BaseFieldAbstract {
         return [
             'company_name' => 'Uasoft Indonesia',
             'library_name' => 'Badaso',
-            'module_name' => 'Badaso GraphGL'
+            'module_name' => 'Badaso GraphGL',
         ];
     }
 }

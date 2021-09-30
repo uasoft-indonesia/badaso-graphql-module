@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Schema;
 use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Models\DataType;
 use Uasoft\Badaso\Module\Graphql\Core\Field\BaseField;
-use Uasoft\Badaso\Module\Graphql\Core\Interfaces\BaseFieldInterface;
 
 class GenerateGraphql
 {
@@ -23,9 +22,9 @@ class GenerateGraphql
     public static $READ_TYPE = 'Read';
     public static $QUERY_TYPE = 'Query';
     public static $MUTATION_TYPE = 'Mutation';
-    public static $CUSTOMIZE = "Customize";
+    public static $CUSTOMIZE = 'Customize';
 
-    public Request $request ;
+    public Request $request;
     public Collection $data_types;
     public array $graphql_data_type;
 
@@ -33,7 +32,7 @@ class GenerateGraphql
     {
         $this->data_types = DataType::all();
         $this->graphql_data_type = [];
-        $this->request = $request ;
+        $this->request = $request;
     }
 
     private function saveToGraphQLDataType($table_name, $key, $value)
@@ -46,17 +45,18 @@ class GenerateGraphql
         $this->graphql_data_type[self::$CUSTOMIZE][$object_type->name] = $object_type;
     }
 
-    public function getCustomizeDataType(string $key){
-        return $this->graphql_data_type[self::$CUSTOMIZE][$key] ;
+    public function getCustomizeDataType(string $key)
+    {
+        return $this->graphql_data_type[self::$CUSTOMIZE][$key];
     }
 
     public function setToGraphQLDataType($table_name, $type_name, $object_type)
     {
-        if (!array_key_exists($table_name, $this->graphql_data_type)) {
+        if (! array_key_exists($table_name, $this->graphql_data_type)) {
             $this->graphql_data_type[$table_name] = [];
         }
 
-        if (!array_key_exists($type_name, $this->graphql_data_type[$table_name])) {
+        if (! array_key_exists($type_name, $this->graphql_data_type[$table_name])) {
             $this->saveToGraphQLDataType($table_name, $type_name, $object_type);
         }
     }
@@ -119,7 +119,7 @@ class GenerateGraphql
                     && $destination_table_column
                     && $destination_table_display_column
                 ) {
-                    if (!array_key_exists($destination_table, $this->graphql_data_type)) {
+                    if (! array_key_exists($destination_table, $this->graphql_data_type)) {
                         // get data type (table data)
                         $data_type = $this->data_types->where('name', $destination_table);
 
@@ -202,7 +202,7 @@ class GenerateGraphql
 
     private function generateModelArrayType($table_name, $data_rows, $type_name)
     {
-        $name_type = ucwords(CaseConvert::camel($table_name . $type_name));
+        $name_type = ucwords(CaseConvert::camel($table_name.$type_name));
         $field_name_types = $data_rows->filter(function ($data_row) use ($type_name) {
             switch ($type_name) {
                 case self::$BROWSE_TYPE:
@@ -255,7 +255,7 @@ class GenerateGraphql
 
     private function generateInputType($table_name, $data_rows, $input_type_name): void
     {
-        $name_create_input_type = ucwords(CaseConvert::camel($table_name . $input_type_name));
+        $name_create_input_type = ucwords(CaseConvert::camel($table_name.$input_type_name));
         $field_create_input_type = $data_rows->filter(function ($data_row) use ($input_type_name) {
             switch ($input_type_name) {
                 case 'CreateInputType':
@@ -333,6 +333,7 @@ class GenerateGraphql
 
             $fields_mutations[$base_field_mutation->getNameCamelCaseFormat()] = $base_field_mutation->toType();
         }
+
         return $fields_mutations;
     }
 
