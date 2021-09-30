@@ -7,6 +7,7 @@ use GraphQL\Error\DebugFlag;
 use GraphQL\Error\Error;
 use GraphQL\Error\FormattedError;
 use GraphQL\GraphQL;
+use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
 use Illuminate\Http\Request;
 use Uasoft\Badaso\Module\Graphql\Core\Formatter\BadasoGraphQLErrorFormatter;
@@ -21,6 +22,7 @@ class BadasoGraphqlController extends Controller
         $graphql_generate->handle();
         $graphql_generate_data_type = $graphql_generate->graphql_data_type;
 
+
         $schema = new Schema([
             'query' => $graphql_generate_data_type['Query'],
             'mutation' => $graphql_generate_data_type['Mutation'],
@@ -30,7 +32,6 @@ class BadasoGraphqlController extends Controller
         $variableValues = isset($request->variables) ? $request->variables : null;
         $rootValue = isset($request->root) ? $request->root : null;
         $context = isset($request->context) ? $request->context : null;
-
 
         $result = GraphQL::executeQuery(
             $schema,
