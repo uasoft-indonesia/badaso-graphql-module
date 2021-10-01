@@ -20,11 +20,11 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     protected $delete_input_type;
     protected $read_type;
     protected $browse_type;
-    protected GenerateGraphql $generate_graphql ;
+    protected GenerateGraphql $generate_graphql;
 
     public function __construct($generate_graphql, $data_type, $fields_mutations)
     {
-        $this->generate_graphql = $generate_graphql ;
+        $this->generate_graphql = $generate_graphql;
         $this->graphql_data_type = $generate_graphql->graphql_data_type;
         $this->data_type = $data_type;
         $this->fields_mutations = $fields_mutations;
@@ -82,7 +82,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateUpdateMutation()
     {
         // generate update
-        $this->fields_mutations[CaseConvert::camel($this->table_name . '_update')] = [
+        $this->fields_mutations[CaseConvert::camel($this->table_name.'_update')] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::string(),

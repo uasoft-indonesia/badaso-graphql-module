@@ -7,9 +7,7 @@ use Uasoft\Badaso\Module\Graphql\Core\Parameters\ResolveParameter;
 
 class BaseField
 {
-
     protected $base_field_interface;
-
 
     public function __construct($base_field_interface)
     {
@@ -23,23 +21,22 @@ class BaseField
 
     public function toType()
     {
-        $output =  [
+        $output = [
             'type' => $this->base_field_interface->getType(),
             'resolve' => function ($object_value, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) {
-
 
                 // handle before process
                 $middleware_resolve = $this->base_field_interface->middlewareResolveHandle($object_value, $args, $context, $info);
 
-                if(!($middleware_resolve instanceof ResolveParameter)){
-                    return $middleware_resolve ;
+                if (! ($middleware_resolve instanceof ResolveParameter)) {
+                    return $middleware_resolve;
                 }
 
                 // result and replace parameter resolve
                 $object_value = $middleware_resolve->object_value;
-                $args = $middleware_resolve->args ;
-                $context = $middleware_resolve->context ;
-                $info = $middleware_resolve->info ;
+                $args = $middleware_resolve->args;
+                $context = $middleware_resolve->context;
+                $info = $middleware_resolve->info;
 
                 // handle process
                 $resolve = $this->base_field_interface->resolve($object_value, $args, $context, $info);

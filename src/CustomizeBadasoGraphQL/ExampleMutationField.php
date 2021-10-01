@@ -10,7 +10,7 @@ class ExampleMutationField extends BaseFieldAbstract
 {
     public function getName(): string
     {
-        return "exampleMutationField";
+        return 'exampleMutationField';
     }
 
     public function getType()

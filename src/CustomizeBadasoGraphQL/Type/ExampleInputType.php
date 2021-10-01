@@ -14,8 +14,8 @@ class ExampleInputType extends InputObjectType
             'fields' => [
                 'module_name' => [
                     'type' => Type::nonNull(Type::string()),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }
