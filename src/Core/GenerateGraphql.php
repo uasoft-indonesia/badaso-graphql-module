@@ -48,18 +48,8 @@ class GenerateGraphql
         $this->graphql_data_type[self::$CUSTOMIZE][$object_type->name] = $object_type;
     }
 
-<<<<<<< HEAD
     public function getCustomizeDataType(string $key){
         return $this->graphql_data_type[self::$CUSTOMIZE][$key];
-=======
-    public function getCustomizeDataType(string $key)
-    {
-        if (isset($this->graphql_data_type[self::$CUSTOMIZE])) {
-            return $this->graphql_data_type[self::$CUSTOMIZE][$key];
-        }
-
-        return null;
->>>>>>> 8f55f8daf2d0bdd47eee228751a71842e3d0e00c
     }
 
     public function setToGraphQLDataType($table_name, $type_name, $object_type)
