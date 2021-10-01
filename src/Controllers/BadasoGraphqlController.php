@@ -44,10 +44,10 @@ class BadasoGraphqlController extends Controller
                 return array_map($formatter, $errors);
             })->toArray();
 
-        $result['message'] =  __('badaso::api_response.200');
+        $result['message'] = __('badaso::api_response.200');
 
-        if(isset($result['errors'])){
-            if(count($result['errors']) > 0){
+        if (isset($result['errors'])) {
+            if (count($result['errors']) > 0) {
                 $result['message'] = 'Invalidate path ';
             } else {
                 $result['errors'] = null;

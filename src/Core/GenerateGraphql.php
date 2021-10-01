@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use stdClass;
 use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Models\DataType;
 use Uasoft\Badaso\Module\Graphql\Core\Field\BaseField;
@@ -33,7 +32,7 @@ class GenerateGraphql
     {
         $this->data_types = DataType::all();
         $this->graphql_data_type = [];
-        $this->request = $request ;
+        $this->request = $request;
 
         // register type from config
         $this->registerDataType();
@@ -49,8 +48,18 @@ class GenerateGraphql
         $this->graphql_data_type[self::$CUSTOMIZE][$object_type->name] = $object_type;
     }
 
+<<<<<<< HEAD
     public function getCustomizeDataType(string $key){
         return $this->graphql_data_type[self::$CUSTOMIZE][$key];
+=======
+    public function getCustomizeDataType(string $key)
+    {
+        if (isset($this->graphql_data_type[self::$CUSTOMIZE])) {
+            return $this->graphql_data_type[self::$CUSTOMIZE][$key];
+        }
+
+        return null;
+>>>>>>> 8f55f8daf2d0bdd47eee228751a71842e3d0e00c
     }
 
     public function setToGraphQLDataType($table_name, $type_name, $object_type)
