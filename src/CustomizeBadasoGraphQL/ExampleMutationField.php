@@ -2,9 +2,9 @@
 
 namespace App\CustomizeBadasoGraphQL;
 
+use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\Definition\Type;
 use Uasoft\Badaso\Module\Graphql\Core\Abstracts\BaseFieldAbstract;
-use Uasoft\Badaso\Module\Graphql\Core\GenerateGraphql;
-use Uasoft\Badaso\Module\Graphql\Core\Interfaces\BaseFieldInterface;
 
 class ExampleMutationField extends BaseFieldAbstract
 {
@@ -37,7 +37,7 @@ class ExampleMutationField extends BaseFieldAbstract
     public function getArgs(): array
     {
         return [
-            'parameter1' => \GraphQL\Type\Definition\Type::string(),
+            'parameter1' => Type::string(),
             'parameter2' => $this->generate_graphql->getCustomizeDataType('example_input_type'),
 
             // or
@@ -52,7 +52,7 @@ class ExampleMutationField extends BaseFieldAbstract
         ];
     }
 
-    public function resolve($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info)
+    public function resolve($objectValue, $args, $context, ResolveInfo $info)
     {
         return [
             'company_name' => 'Uasoft Indonesia ['.$args['parameter1'].']',
