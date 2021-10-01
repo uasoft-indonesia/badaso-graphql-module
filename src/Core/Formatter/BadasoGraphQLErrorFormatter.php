@@ -13,7 +13,6 @@ use Uasoft\Badaso\Module\Graphql\Core\Exception\BadasoGraphQLException;
 
 class BadasoGraphQLErrorFormatter extends FormattedError
 {
-
     /** @var string */
     private static $internalErrorMessage = 'Internal server error';
 
@@ -26,8 +25,7 @@ class BadasoGraphQLErrorFormatter extends FormattedError
      *
      * For a list of available debug flags @see \GraphQL\Error\DebugFlag constants.
      *
-     * @param string $internalErrorMessage
-     *
+     * @param  string  $internalErrorMessage
      * @return mixed[]
      *
      * @throws Throwable
@@ -36,11 +34,9 @@ class BadasoGraphQLErrorFormatter extends FormattedError
      */
     public static function createFromException(Throwable $exception, int $debug = DebugFlag::NONE, $internalErrorMessage = null): array
     {
-
         $internalErrorMessage = $internalErrorMessage ?? self::$internalErrorMessage;
 
         if ($exception instanceof ClientAware) {
-
             $formattedError = [
                 'message'  => $exception->isClientSafe() ? $exception->getMessage() : $internalErrorMessage,
                 'extensions' => [

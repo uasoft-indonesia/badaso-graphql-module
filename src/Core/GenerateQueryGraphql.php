@@ -2,7 +2,6 @@
 
 namespace Uasoft\Badaso\Module\Graphql\Core;
 
-use Doctrine\DBAL\Types\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\DB;
 use Uasoft\Badaso\Helpers\CaseConvert;
@@ -52,7 +51,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateFindQuery()
     {
         // @find with id
-        $this->fields_query[CaseConvert::camel($this->table_name . '_find')] = [
+        $this->fields_query[CaseConvert::camel($this->table_name.'_find')] = [
             'type' => $this->read_type,
             'args' => [
                 'id' => Type::nonNull(Type::id()),
@@ -65,9 +64,10 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
         ];
     }
 
-    public function generateSearchQuery(){
+    public function generateSearchQuery()
+    {
         // @search text
-        $this->fields_query[CaseConvert::camel($this->table_name . '_search')] = [
+        $this->fields_query[CaseConvert::camel($this->table_name.'_search')] = [
             'type' => new PaginateType($this->browse_type, 'search_'.$this->table_name),
             'args' => [
                 'q' => [
@@ -79,7 +79,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
                     'description' => "
                         search by * for all field in table, your can add only one field\n
                         example : ['name_file1', 'name_field2', ..., 'name_fieldN']
-                    "
+                    ",
                 ],
                 'page' => [
                     'type' => Type::int(),
@@ -88,33 +88,33 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
                 'maxDataPerPage' => [
                     'type' => Type::int(),
                     'defaultValue' => 15,
-                ]
+                ],
             ],
             'resolve' => function ($rootValue, $args) {
                 $this->permissionCrud('read');
 
-                ['q' => $q, 'bys' => $bys, 'page' => $page, 'maxDataPerPage' => $max_data_per_page] = $args ;
+                ['q' => $q, 'bys' => $bys, 'page' => $page, 'maxDataPerPage' => $max_data_per_page] = $args;
 
-                $query = DB::table($this->table_name) ;
+                $query = DB::table($this->table_name);
 
                 foreach ($bys as $key => $by) {
                     if ($by == '*') {
                         foreach ($this->browse_type->getFields() as $key => $field) {
                             $field_name = $field->name;
-                            $query = $query->orWhere($field_name, "like", "%{$q}%");
+                            $query = $query->orWhere($field_name, 'like', "%{$q}%");
                         }
                     } else {
-                        $query = $query->orWhere($by, "like", "%{$q}%");
+                        $query = $query->orWhere($by, 'like', "%{$q}%");
                     }
                 }
 
-                $query = $query->offset(ceil(abs($page - 1) * $max_data_per_page))->limit($max_data_per_page) ;
+                $query = $query->offset(ceil(abs($page - 1) * $max_data_per_page))->limit($max_data_per_page);
 
                 $data = $query->get();
                 $max_data = $query->count();
-                $max_page = ceil($max_data/$max_data_per_page) ;
+                $max_page = ceil($max_data / $max_data_per_page);
 
-                return PaginateType::result($data, $max_data, $max_page) ;
+                return PaginateType::result($data, $max_data, $max_page);
             },
         ];
     }
@@ -134,18 +134,18 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
                         'maxDataPerPage' => [
                             'type' => Type::int(),
                             'defaultValue' => 15,
-                        ]
+                        ],
                     ],
                     'resolve' => function ($rootValue, $args) {
                         $this->permissionCrud('browse');
 
-                        ['page' => $page, 'maxDataPerPage' => $max_data_per_page] = $args ;
+                        ['page' => $page, 'maxDataPerPage' => $max_data_per_page] = $args;
 
-                        $query = DB::table($this->table_name)->offset(ceil(abs($page - 1) * $max_data_per_page))->limit($max_data_per_page) ;
+                        $query = DB::table($this->table_name)->offset(ceil(abs($page - 1) * $max_data_per_page))->limit($max_data_per_page);
 
                         $max_data = $query->count();
                         $data = $query->get();
-                        $max_page = ceil($max_data/$max_data_per_page) ;
+                        $max_page = ceil($max_data / $max_data_per_page);
 
                         return PaginateType::result($data, $max_data, $max_page);
                     },
@@ -158,17 +158,16 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
                     'resolve' => function ($rootValue, $args) {
                         $this->permissionCrud('browse');
 
-                        $query = DB::table($this->table_name) ;
+                        $query = DB::table($this->table_name);
                         $data = $query->get();
 
-                        $max_data = $data->count() ;
+                        $max_data = $data->count();
+
                         return ResultAllDataType::result($data, $max_data);
                     },
                 ];
             };
         }
-
-
     }
 
     public function handle()
