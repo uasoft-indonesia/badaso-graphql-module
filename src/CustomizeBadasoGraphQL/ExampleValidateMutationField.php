@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Validator;
 use Uasoft\Badaso\Module\Graphql\Core\Abstracts\BaseFieldAbstract;
 use Uasoft\Badaso\Module\Graphql\Core\Exception\BadasoGraphQLException;
 
-class ExampleValidateMutationField  extends BaseFieldAbstract
+class ExampleValidateMutationField extends BaseFieldAbstract
 {
     public function getName(): string
     {
-        return "exampleValidateMutationField";
+        return 'exampleValidateMutationField';
     }
 
     public function getType()
@@ -25,14 +25,14 @@ class ExampleValidateMutationField  extends BaseFieldAbstract
     {
         return [
             'whatCompanyName' => [
-                "type" => Type::string(),
+                'type' => Type::string(),
             ],
             'whatLibraryName' => [
-                "type" => Type::string(),
+                'type' => Type::string(),
             ],
             'whatModuleName' => [
-                "type" => Type::string(),
-            ]
+                'type' => Type::string(),
+            ],
         ];
     }
 
@@ -40,44 +40,44 @@ class ExampleValidateMutationField  extends BaseFieldAbstract
     {
         $validate = Validator::make($args, [
             'whatCompanyName' => ['required', function ($att, $value, $fail) {
-                if (strtolower($value) != "uasoft") {
-                    return $fail("Incorrect answer company name");
+                if (strtolower($value) != 'uasoft') {
+                    return $fail('Incorrect answer company name');
                 }
             }],
             'whatLibraryName' => ['required', function ($att, $value, $fail) {
-                if (strtolower($value) != "badaso") {
-                    return $fail("Incorrect answer library name");
+                if (strtolower($value) != 'badaso') {
+                    return $fail('Incorrect answer library name');
                 }
             }],
             'whatModuleName' => ['required', function ($att, $value, $fail) {
-                if (strtolower($value) != "graphql") {
-                    return $fail("Incorrect answer library name");
+                if (strtolower($value) != 'graphql') {
+                    return $fail('Incorrect answer library name');
                 }
             }],
         ]);
 
         if ($validate->fails()) {
-            throw new BadasoGraphQLException("Invalidate Parameter", $validate->errors()->toArray());
+            throw new BadasoGraphQLException('Invalidate Parameter', $validate->errors()->toArray());
         }
 
         return [
             'company_name' => 'Uasoft Indonesia',
             'library_name' => 'Badaso',
-            'module_name' => 'Badaso GraphGL'
+            'module_name' => 'Badaso GraphGL',
         ];
     }
 
     public function middlewareResolveHandle($objectValue, $args, $context, ResolveInfo $info)
     {
-
         ['whatCompanyName' => $what_company_name] = $args;
 
-        if ($what_company_name == "uasoft indonesia") {
+        if ($what_company_name == 'uasoft indonesia') {
             $random = rand(1, 9999);
+
             return [
-                'company_name' => 'success[flag="' . Hash::make($random) . '"]',
-                'library_name' => 'success[flag="' . Hash::make($random) . '"]',
-                'module_name' => 'success[flag="' . Hash::make($random) . '"]'
+                'company_name' => 'success[flag="'.Hash::make($random).'"]',
+                'library_name' => 'success[flag="'.Hash::make($random).'"]',
+                'module_name' => 'success[flag="'.Hash::make($random).'"]',
             ];
         }
 

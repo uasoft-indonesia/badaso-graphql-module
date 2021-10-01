@@ -32,7 +32,7 @@ class BadasoGraphqlModuleServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../Routes/graphql.php');
 
         $this->publishes([
-            __DIR__ . '/../CustomizeBadasoGraphQL' => app_path('CustomizeBadasoGraphQL'),
+            __DIR__.'/../CustomizeBadasoGraphQL' => app_path('CustomizeBadasoGraphQL'),
         ], 'badaso-graphql');
 
         $this->publishes([

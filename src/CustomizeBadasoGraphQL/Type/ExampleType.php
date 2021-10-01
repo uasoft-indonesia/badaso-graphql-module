@@ -20,8 +20,8 @@ class ExampleType extends ObjectType
                 ],
                 'module_name' => [
                     'type' => Type::string(),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }
