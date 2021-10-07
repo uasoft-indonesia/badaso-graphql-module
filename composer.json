@@ -1,6 +1,6 @@
 {
   "name": "badaso/graphql-module",
-  "version": "v2.0.0-rc.2",
+  "version": "v2.0.0",
   "description": "Use GraphQL on badaso",
   "keywords": [
     "laravel",
