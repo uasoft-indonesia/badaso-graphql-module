@@ -5,55 +5,52 @@ namespace Uasoft\Badaso\Module\Graphql\Core;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Uasoft\Badaso\Helpers\CaseConvert;
 use Uasoft\Badaso\Models\DataType;
+use Uasoft\Badaso\Module\Graphql\Core\Field\BaseField;
 
 class GenerateGraphql
 {
-    public static $createInputType = 'CreateInputType';
-    public static $updateInputType = 'UpdateInputType';
-    public static $deleteInputType = 'DeleteInputType';
-    public static $browseType = 'Browse';
-    public static $readType = 'Read';
-    public static $queryType = 'Query';
-    public static $mutationType = 'Mutation';
-    public $accommodate;
-    public $accommodateBadasoGraphQL;
-    public $data_types;
-    public $graphql_data_type;
+    public static $CREATE_INPUT_TYPE = 'CreateInputType';
+    public static $UPDATE_INPUT_TYPE = 'UpdateInputType';
+    public static $DELETE_INPUT_TYPE = 'DeleteInputType';
+    public static $BROWSE_TYPE = 'Browse';
+    public static $READ_TYPE = 'Read';
+    public static $QUERY_TYPE = 'Query';
+    public static $MUTATION_TYPE = 'Mutation';
+    public static $CUSTOMIZE = 'Customize';
 
-    public function __construct()
+    public Request $request;
+    public Collection $data_types;
+    public array $graphql_data_type;
+
+    public function __construct(Request $request)
     {
         $this->data_types = DataType::all();
         $this->graphql_data_type = [];
+        $this->request = $request;
 
-        // AccommodateClassRegister
-        $this->accommodate = config('badaso-graphql.accommodate_badaso_graphql_class');
-        $this->accommodateBadasoGraphQL = new $this->accommodate();
-
-        // Custom Type
-        foreach ($this->accommodateBadasoGraphQL->registerType() as $index => $registerType) {
-            $type_class = new $registerType();
-            $type_class->setGenerateGraphQL($this);
-            $this->graphql_data_type = array_merge($this->graphql_data_type, $type_class->getType());
-        }
-
-        // Custom Type From Core
-        foreach (scandir(__DIR__.'/Type') as $index => $registerType) {
-            if ($index >= 2) {
-                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Type\\'.str_replace('.php', '', $registerType);
-                $type_class = new $name_class();
-                $type_class->setGenerateGraphQL($this);
-                $this->graphql_data_type = array_merge($this->graphql_data_type, $type_class->getType());
-            }
-        }
+        // register type from config
+        $this->registerDataType();
     }
 
     private function saveToGraphQLDataType($table_name, $key, $value)
     {
         $this->graphql_data_type[$table_name][$key] = $value;
+    }
+
+    private function addGraphGLCustomizeDataType(Type $object_type)
+    {
+        $this->graphql_data_type[self::$CUSTOMIZE][$object_type->name] = $object_type;
+    }
+
+    public function getCustomizeDataType(string $key)
+    {
+        return $this->graphql_data_type[self::$CUSTOMIZE][$key];
     }
 
     public function setToGraphQLDataType($table_name, $type_name, $object_type)
@@ -73,57 +70,25 @@ class GenerateGraphql
         $fields_query = [];
         $fields_mutations = [];
         foreach ($data_types as $index => $data_type) {
-            $generate_query_graphql = config('badaso-graphql.class.generate_query_graphql');
-            $fields_query = (new $generate_query_graphql($this->graphql_data_type, $data_type, $fields_query))->handle();
+            $generate_query_graphql = config('badaso-graphql-customize.core.generate_query_graphql');
+            $fields_query = (new $generate_query_graphql($this, $data_type, $fields_query))->handle();
 
-            $generate_mutation_graphql = config('badaso-graphql.class.generate_mutation_graphql');
-            $fields_mutations = (new $generate_mutation_graphql($this->graphql_data_type, $data_type, $fields_mutations))->handle();
-        }
-
-        // Custom Query
-        foreach ($this->accommodateBadasoGraphQL->registerQuery() as $index => $registerQuery) {
-            $query_type_class = new $registerQuery();
-            $query_type_class->setGenerateGraphQL($this, $fields_query);
-            $fields_query = array_merge($fields_query, $query_type_class->getFieldQuery());
-        }
-
-        // Custom Query From Core
-        foreach (scandir(__DIR__.'/Query') as $index => $registerType) {
-            if ($index >= 2) {
-                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Query\\'.str_replace('.php', '', $registerType);
-                $query_type_class = new $name_class();
-                $query_type_class->setGenerateGraphQL($this, $fields_query);
-                $fields_query = array_merge($fields_query, $query_type_class->getFieldQuery());
-            }
+            $generate_mutation_graphql = config('badaso-graphql-customize.core.generate_mutation_graphql');
+            $fields_mutations = (new $generate_mutation_graphql($this, $data_type, $fields_mutations))->handle();
         }
 
         // Query
-        $name_query = self::$queryType;
+        $fields_query = $this->registerFieldsQuery($fields_query);
+        $name_query = self::$QUERY_TYPE;
         $object_query = new ObjectType([
             'name' => $name_query,
             'fields' => $fields_query,
         ]);
         $this->graphql_data_type[$name_query] = $object_query;
 
-        // Custom Mutation
-        foreach ($this->accommodateBadasoGraphQL->registerMutation() as $index => $registerMutation) {
-            $mutation_type_class = new $registerMutation();
-            $mutation_type_class->setGenerateGraphQL($this, $fields_mutations);
-            $fields_mutations = array_merge($fields_mutations, $mutation_type_class->getFieldMutation());
-        }
-
-        // Custom Mutation From Core
-        foreach (scandir(__DIR__.'/Mutation') as $index => $registerType) {
-            if ($index >= 2) {
-                $name_class = 'Uasoft\\Badaso\\Module\\Graphql\\Core\\Mutation\\'.str_replace('.php', '', $registerType);
-                $mutation_type_class = new $name_class();
-                $mutation_type_class->setGenerateGraphQL($this, $fields_mutations);
-                $fields_mutations = array_merge($fields_mutations, $mutation_type_class->getFieldMutation());
-            }
-        }
-
         // Mutation
-        $name_mutation = self::$mutationType;
+        $fields_mutations = $this->registerFieldsMutation($fields_mutations);
+        $name_mutation = self::$MUTATION_TYPE;
         $object_mutation = new ObjectType([
             'name' => $name_mutation,
             'fields' => $fields_mutations,
@@ -175,19 +140,19 @@ class GenerateGraphql
                             $array_type = $this->generateModelArrayType(
                                 $destination_table,
                                 $data_row_relation,
-                                self::$browseType
+                                self::$BROWSE_TYPE
                             );
                         } else {
                             $data_row_relation = $data_type->dataRows;
                             $array_type = $this->generateModelArrayType(
                                 $destination_table,
                                 $data_row_relation,
-                                self::$browseType
+                                self::$BROWSE_TYPE
                             );
                         }
 
                         $object_type = new ObjectType($array_type['array_type']);
-                        $this->setToGraphQLDataType($destination_table, self::$browseType, $object_type);
+                        $this->setToGraphQLDataType($destination_table, self::$BROWSE_TYPE, $object_type);
                     }
 
                     $field_data_row = $data_row->field;
@@ -195,7 +160,7 @@ class GenerateGraphql
                     switch ($relation_type) {
                         case 'belongs_to':
                             $fields[$destination_table] = [
-                                'type' => $graphql_data_type[self::$browseType],
+                                'type' => $graphql_data_type[self::$BROWSE_TYPE],
                                 'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->first();
@@ -208,7 +173,7 @@ class GenerateGraphql
                         case 'has_one':
                             // replace this
                             $fields[$destination_table] = [
-                                'type' => $graphql_data_type[self::$browseType],
+                                'type' => $graphql_data_type[self::$BROWSE_TYPE],
                                 'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->first();
@@ -221,7 +186,7 @@ class GenerateGraphql
                         case 'has_many':
                             // replace this
                             $fields[$destination_table] = [
-                                'type' => $graphql_data_type[self::$browseType],
+                                'type' => $graphql_data_type[self::$BROWSE_TYPE],
                                 'resolve' => function ($rootValue, $args) use ($destination_table, $destination_table_column, $field_data_row) {
                                     $relation_value = $rootValue->{$field_data_row};
                                     $result = DB::table($destination_table)->where($destination_table_column, $relation_value)->get();
@@ -243,9 +208,9 @@ class GenerateGraphql
         $name_type = ucwords(CaseConvert::camel($table_name.$type_name));
         $field_name_types = $data_rows->filter(function ($data_row) use ($type_name) {
             switch ($type_name) {
-                case self::$browseType:
+                case self::$BROWSE_TYPE:
                     return $data_row->browse;
-                case self::$readType:
+                case self::$READ_TYPE:
                     return $data_row->read;
             }
         });
@@ -332,13 +297,44 @@ class GenerateGraphql
     {
         $table_name = $data_type->name;
         $data_rows = $data_type->dataRows;
-        foreach ([self::$createInputType, self::$updateInputType, self::$deleteInputType] as $index => $input_type_name) {
+        foreach ([self::$CREATE_INPUT_TYPE, self::$UPDATE_INPUT_TYPE, self::$DELETE_INPUT_TYPE] as $index => $input_type_name) {
             $this->generateInputType($table_name, $data_rows, $input_type_name);
         }
 
-        foreach ([self::$browseType, self::$readType] as $key => $input_type_name) {
+        foreach ([self::$BROWSE_TYPE, self::$READ_TYPE] as $key => $input_type_name) {
             $this->generateModelType($table_name, $data_rows, $input_type_name);
         }
+    }
+
+    public function registerDataType(): void
+    {
+        foreach (config('badaso-graphql-customize.type') as $type_name => $object_type) {
+            $this->addGraphGLCustomizeDataType(new $object_type());
+        }
+    }
+
+    public function registerFieldsQuery(array $fields_query): array
+    {
+        foreach (config('badaso-graphql-customize.query') as $key => $field_query_object) {
+            $field_query = new $field_query_object($this);
+            $base_field_query = new BaseField($field_query);
+
+            $fields_query[$base_field_query->getNameCamelCaseFormat()] = $base_field_query->toType();
+        }
+
+        return $fields_query;
+    }
+
+    public function registerFieldsMutation(array $fields_mutations): array
+    {
+        foreach (config('badaso-graphql-customize.mutation') as $index => $field_mutation_object) {
+            $field_mutation = new $field_mutation_object($this);
+            $base_field_mutation = new BaseField($field_mutation);
+
+            $fields_mutations[$base_field_mutation->getNameCamelCaseFormat()] = $base_field_mutation->toType();
+        }
+
+        return $fields_mutations;
     }
 
     public function handle()

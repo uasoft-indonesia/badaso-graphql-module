@@ -12,7 +12,7 @@ Route::group(
     ],
     function () {
         Route::group(['prefix' => 'v1'], function () {
-            Route::post('/', 'BadasoGraphqlController@graphql');
+            Route::match(['post', 'get'], '/', 'BadasoGraphqlController@graphql');
         });
     }
 );
