@@ -20,6 +20,7 @@ return [
 
     'mutation' => [
         App\CustomizeBadasoGraphQL\ExampleMutationField::class,
+        App\CustomizeBadasoGraphQL\ExampleValidateMutationField::class,
         // register mutation ...
     ],
 ];

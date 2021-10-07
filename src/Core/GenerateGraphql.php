@@ -33,6 +33,9 @@ class GenerateGraphql
         $this->data_types = DataType::all();
         $this->graphql_data_type = [];
         $this->request = $request;
+
+        // register type from config
+        $this->registerDataType();
     }
 
     private function saveToGraphQLDataType($table_name, $key, $value)
@@ -301,9 +304,6 @@ class GenerateGraphql
         foreach ([self::$BROWSE_TYPE, self::$READ_TYPE] as $key => $input_type_name) {
             $this->generateModelType($table_name, $data_rows, $input_type_name);
         }
-
-        // register type from config
-        $this->registerDataType();
     }
 
     public function registerDataType(): void

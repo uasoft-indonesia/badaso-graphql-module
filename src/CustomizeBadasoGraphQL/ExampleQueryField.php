@@ -2,6 +2,7 @@
 
 namespace App\CustomizeBadasoGraphQL;
 
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Uasoft\Badaso\Module\Graphql\Core\Abstracts\BaseFieldAbstract;
 
@@ -36,11 +37,11 @@ class ExampleQueryField extends BaseFieldAbstract
     public function getArgs(): array
     {
         return [
-            'parameter1' => Type::nonNull(\GraphQL\Type\Definition\Type::string()),
+            'parameter1' => Type::nonNull(Type::string()),
         ];
     }
 
-    public function resolve($objectValue, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info)
+    public function resolve($objectValue, $args, $context, ResolveInfo $info)
     {
         return [
             'company_name' => 'Uasoft Indonesia',
