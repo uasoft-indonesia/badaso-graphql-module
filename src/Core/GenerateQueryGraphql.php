@@ -51,7 +51,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateFindQuery()
     {
         // @find with id
-       
+
         $this->fields_query[CaseConvert::camel($this->table_name.'_find')] = [
             'type' => $this->read_type,
             'args' => [
@@ -163,7 +163,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
                         $data = $query->get();
 
                         $max_data = $data->count();
-                                                    
+
                         return ResultAllDataType::result($data, $max_data);
                     },
                 ];
