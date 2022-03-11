@@ -97,7 +97,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
                     $data_update = $args['input'];
                     $data_update['id'] = $data_update_id;
 
-                    $updated = $this->updateData($data_update, $this->data_type)['updated_data'];
+                    $updated = $this->updateData($data_update, $this->data_type);
 
                     activity($this->data_type->display_name_singular)
                         ->causedBy(auth()->user() ?? null)
@@ -109,7 +109,7 @@ class GenerateMutationGraphql extends \Uasoft\Badaso\Controllers\Controller
 
                     DB::commit();
 
-                    return $updated;
+                    return $updated['updated_data'];
                 } catch (\Exception $e) {
                     DB::rollBack();
                     throw new UserError($e->getMessage());

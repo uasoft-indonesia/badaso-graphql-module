@@ -51,6 +51,7 @@ class GenerateQueryGraphql extends \Uasoft\Badaso\Controllers\Controller
     public function generateFindQuery()
     {
         // @find with id
+
         $this->fields_query[CaseConvert::camel($this->table_name.'_find')] = [
             'type' => $this->read_type,
             'args' => [

@@ -37,6 +37,11 @@
       "Uasoft\\Badaso\\Module\\Graphql\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Uasoft\\Badaso\\Module\\Graphql\\Tests\\": "tests/"
+    }
+  },
   "extra": {
     "laravel": {
       "providers": [
