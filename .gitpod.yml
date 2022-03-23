@@ -19,7 +19,6 @@ tasks:
       php artisan key:generate &&
       mysql -u root -e "create database laravel"
     command: php artisan badaso:setup --force &&
-      php artisan badaso-post:setup &&
       php artisan badaso-graphql:setup &&
       sed -i 's/http:\/\/localhost//g' .env &&
       sed -i 's/FILESYSTEM_DRIVER=local/FILESYSTEM_DRIVER=public/g' .env &&
@@ -30,6 +29,7 @@ tasks:
       echo -e "\nMIX_GRAPHQL_PREFIX_URI='/graphql-playground'" >> .env &&
       echo -e "\nMIX_POST_URL_PREFIX='post'" >> .env &&
       php artisan migrate &&
+      php artisan badaso-post:setup &&
       php artisan db:seed --class="Database\Seeders\Badaso\BadasoSeeder" &&
       php artisan db:seed --class="Database\Seeders\Badaso\Post\BadasoPostModuleSeeder" &&
       php artisan db:seed --class="Database\Seeders\Badaso\GraphQL\BadasoGraphQLModuleSeeder" &&
