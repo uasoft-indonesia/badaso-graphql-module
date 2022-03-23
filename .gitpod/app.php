@@ -166,7 +166,7 @@ return [
          * Package Service Providers...
          */
         Uasoft\Badaso\Module\Graphql\Providers\BadasoGraphqlModuleServiceProvider::class,
-        Uasoft\Badaso\Module\Graphql\Providers\BadasoGraphqlModuleServiceProvider::class,
+        Uasoft\Badaso\Module\Post\Providers\BadasoPostModuleServiceProvider::class,
         Uasoft\Badaso\Providers\BadasoServiceProvider::class,
         /*
          * Application Service Providers...
