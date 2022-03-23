@@ -49,6 +49,7 @@
         "psr-4": {
             "App\\": "app/",
             "Uasoft\\Badaso\\Module\\Graphql\\": "packages/badaso/graphql-module/src/",
+            "Uasoft\\Badaso\\Module\\Post\\": "packages/badaso/post-module/src/",
             "Uasoft\\Badaso\\": "packages/badaso/core/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
