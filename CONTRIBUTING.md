@@ -108,7 +108,7 @@ composer dump-autoload
 ```
 MIX_DEFAULT_MENU=admin
 MIX_BADASO_MENU=${MIX_DEFAULT_MENU},graphql-module
-MIX_BADASO_MODULES=graphql-module
+MIX_BADASO_PLUGINS=graphql-module
 
 MIX_GRAPHQL_PREFIX_URI="/graphql-playground"
 ```
