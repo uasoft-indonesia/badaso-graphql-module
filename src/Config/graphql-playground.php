@@ -16,7 +16,7 @@ return [
     'route' => [
         'uri' => env('MIX_GRAPHQL_PREFIX_URI', '/graphql-playground'),
         'name' => 'graphql-playground',
-        'middleware' => [Uasoft\Badaso\Middleware\BadasoAuthenticateIframe::class.':graphql-playground'],
+        // 'middleware' => [Uasoft\Badaso\Middleware\BadasoAuthenticate::class.':graphql-playground'],
         // 'prefix' => '',
         // 'domain' => 'graphql.' . env('APP_DOMAIN', 'localhost'),
     ],
